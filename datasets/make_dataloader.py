@@ -8,6 +8,7 @@ from .sampler import RandomIdentitySampler, ReIDBatchSampler
 from .sampler_ddp import RandomIdentitySampler_DDP
 import torch.distributed as dist
 from .mars import Mars
+from .polarbearvidid import PolarBearVidID
 from .ilids import iLIDSVID
 
 from .misc import get_transforms, init_worker
@@ -15,6 +16,7 @@ from .misc import get_transforms, init_worker
 __factory = {
     'mars': Mars,
     'ilids': iLIDSVID,
+    'polarbearvidid': PolarBearVidID,
 }
 
 def train_collate_fn(batch):
@@ -61,7 +63,7 @@ def make_dataloader(cfg):
     else:
         dataset = __factory[cfg.DATASETS.NAMES](root=cfg.DATASETS.ROOT_DIR)
 
-    if cfg.DATASETS.NAMES in ['mars', 'duke-video-reid']:
+    if cfg.DATASETS.NAMES in ['mars', 'duke-video-reid','polarbearvidid']:
         s_tr_train, t_tr_train = get_transforms(True, cfg)
         train_set = VideoDataset(dataset.train, spatial_transform=s_tr_train,
                                  temporal_transform=t_tr_train)
@@ -90,7 +92,7 @@ def make_dataloader(cfg):
                 pin_memory=True,
             )
         else:
-            if cfg.DATASETS.NAMES in ['mars']:
+            if cfg.DATASETS.NAMES in ['mars','polarbearvidid']:
                 train_loader = [DataLoader(
                     train_set, batch_sampler=ReIDBatchSampler(dataset.train, p=cfg.DATALOADER.P,
                                                               k=cfg.DATALOADER.K),
@@ -120,7 +122,7 @@ def make_dataloader(cfg):
     else:
         print('unsupported sampler! expected softmax or triplet but got {}'.format(cfg.SAMPLER))
 
-    if cfg.DATASETS.NAMES in ['mars']:
+    if cfg.DATASETS.NAMES in ['mars','polarbearvidid']:
         s_tr_test, t_tr_test = get_transforms(False, cfg)
 
         val_set = VideoDataset(dataset.query + dataset.gallery, spatial_transform=s_tr_test,

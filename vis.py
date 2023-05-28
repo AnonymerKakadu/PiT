@@ -71,7 +71,7 @@ if __name__ == "__main__":
         T.Normalize(mean=[0.485, 0.456, 0.406], std=[0.229, 0.224, 0.225])
     ])
 
-    filename = '0208C6T0044F010'
+    filename = 'testimage'
     with open(filename+'.jpg', 'rb') as f:
         with Image.open(f) as im:
             img = im.convert('RGB')

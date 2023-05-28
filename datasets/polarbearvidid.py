@@ -55,9 +55,10 @@ class PolarBearVidID(BaseImageDataset):
         # Check if the info file exists
         self._check_before_run(all_images)
 
+        fold_amount = 5 # TODO change to 5
         # Load meta data
         track_fold_info = {}
-        for i in range(1, 2): # change to 6
+        for i in range(1, fold_amount+1):
             track_fold_info[i] = pd.read_csv(getattr(self, f'track_fold_info_{i}'))
 
         # Create dict with names
@@ -68,14 +69,14 @@ class PolarBearVidID(BaseImageDataset):
         all_images_set = set(all_images)
 
         # For all Folds get the names of the test tracklets and split them into query and gallery
-        for i in range(1, 2):
+        for i in range(1, fold_amount+1):
             print(f"Loading fold {i}")
             test_images[i] = self._get_dataset_images(track_fold_info[i])
     
             # get tracklet and id combination of test_images[i]
             temp_test_images = test_images[i]
-            for l in range(len(test_images[i])):
-                temp_test_images_set = set(temp_test_images)
+
+            temp_test_images_set = set(temp_test_images)
             train_images[i] = list(all_images_set - temp_test_images_set)
 
             # TODO: Query should get assigned dynamically
@@ -104,7 +105,7 @@ class PolarBearVidID(BaseImageDataset):
         print(separator)
         print("Evaluating fold values:")
 
-        for i in range(1, 2):
+        for i in range(1, fold_amount+1):
             print("Fold: ", i)
             print(f"All images: {len(all_images):>9}")
             print(f"Train images: {len(train_images[i]):>9}")
@@ -141,7 +142,7 @@ class PolarBearVidID(BaseImageDataset):
         num_total_pids = {}
         num_total_tracklets = {}
 
-        for i in range(1, 2):
+        for i in range(1, fold_amount+1):
             train[i], num_train_tracklets[i], num_train_pids[i], num_train_imgs[i] = \
             self._process_data(train_images[i])
 
@@ -176,7 +177,7 @@ class PolarBearVidID(BaseImageDataset):
         print("  Subset    | # Ids | # Tracklets | # Images")
         print("  ------------------------------------------")
 
-        for i in range(1, 2):
+        for i in range(1, fold_amount+1):
             print("  {}. Fold:".format(i))
             print("  ------------------------------------------")
             print("  Train {}   | {:5d} | {:8d} | {:8d}".format(i, num_train_pids[i], num_train_tracklets[i], np.sum(num_train_imgs[i])))
@@ -246,6 +247,8 @@ class PolarBearVidID(BaseImageDataset):
             raise RuntimeError("'{}' is not available".format(self.animal_db))
         if not osp.exists(self.track_info):
             raise RuntimeError("'{}' is not available".format(self.track_info))
+        
+        # TODO optimize this
         for image in all_images:
             if not osp.exists(str(image)):
                 raise RuntimeError("'{}' is not available".format(image))

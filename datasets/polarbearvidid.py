@@ -247,8 +247,6 @@ class PolarBearVidID(BaseImageDataset):
             raise RuntimeError("'{}' is not available".format(self.animal_db))
         if not osp.exists(self.track_info):
             raise RuntimeError("'{}' is not available".format(self.track_info))
-        
-        # TODO optimize this
         for image in all_images:
             if not osp.exists(str(image)):
                 raise RuntimeError("'{}' is not available".format(image))

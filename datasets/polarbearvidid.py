@@ -19,7 +19,7 @@ class PolarBearVidID(BaseImageDataset):
     Class for loading the PolarBearVidID dataset.
     """
 
-    def __init__(self, root='/data/datasets/', min_seq_len=0):
+    def __init__(self, root='/data/datasets/', split_id=1):
         '''
         Initialize the Dataset Object
 
@@ -29,16 +29,17 @@ class PolarBearVidID(BaseImageDataset):
         Returns:
             None
         '''
-        print(r"""
-        
-    ____        __           ____                 _    ___     __________ 
-   / __ \____  / /___ ______/ __ )___  ____ _____| |  / (_)___/ /  _/ __ \
-  / /_/ / __ \/ / __ `/ ___/ __  / _ \/ __ `/ ___/ | / / / __  // // / / /
- / ____/ /_/ / / /_/ / /  / /_/ /  __/ /_/ / /   | |/ / / /_/ // // /_/ / 
-/_/    \____/_/\__,_/_/  /_____/\___/\__,_/_/    |___/_/\__,_/___/_____/  
-                                                                                                                                                      
-        """)
-        print('Initializing PolarBearVidID Dataset - This may take a while...')
+        if split_id == 1:
+            print(r"""
+            
+        ____        __           ____                 _    ___     __________ 
+       / __ \____  / /___ ______/ __ )___  ____ _____| |  / (_)___/ /  _/ __ \
+      / /_/ / __ \/ / __ `/ ___/ __  / _ \/ __ `/ ___/ | / / / __  // // / / /
+     / ____/ /_/ / / /_/ / /  / /_/ /  __/ /_/ / /   | |/ / / /_/ // // /_/ / 
+    /_/    \____/_/\__,_/_/  /_____/\___/\__,_/_/    |___/_/\__,_/___/_____/  
+                                                                                                                                                        
+            """)
+            print('Initializing PolarBearVidID Dataset - This may take a while...')
         # Create info file path
         self.root = osp.join(root, 'PolarBearVidID')
         self.track_fold_info_1 = osp.join(self.root, 'track_fold_info_1.csv')
@@ -52,14 +53,14 @@ class PolarBearVidID(BaseImageDataset):
         track_info = pd.read_csv(self.track_info)
         all_images = self._get_dataset_images(track_info)
 
-        # Check if the info file exists
-        self._check_before_run(all_images)
+        # Check if the info file exists only at first run
+        if split_id == 1:
+            self._check_before_run(all_images)
 
-        fold_amount = 5 # TODO change to 5
         # Load meta data
         track_fold_info = {}
-        for i in range(1, fold_amount+1):
-            track_fold_info[i] = pd.read_csv(getattr(self, f'track_fold_info_{i}'))
+        
+        track_fold_info[split_id] = pd.read_csv(getattr(self, f'track_fold_info_{split_id}'))
 
         # Create dict with names
         test_images = {}
@@ -69,55 +70,33 @@ class PolarBearVidID(BaseImageDataset):
         all_images_set = set(all_images)
 
         # For all Folds get the names of the test tracklets and split them into query and gallery
-        for i in range(1, fold_amount+1):
-            print(f"Loading fold {i}")
-            test_images[i] = self._get_dataset_images(track_fold_info[i])
-    
-            # get tracklet and id combination of test_images[i]
-            temp_test_images = test_images[i]
-
-            temp_test_images_set = set(temp_test_images)
-            train_images[i] = list(all_images_set - temp_test_images_set)
-
-            # TODO: Query should get assigned dynamically
-            setlist = []
-            for instance in test_images[i]:
-                setlist.append(instance.get_individual())
-            setlist = list(set(setlist))
-            split_index = round(len(setlist) * 0.2)
-
-            querylist = []
-            gallerylist = []
-            for instance in test_images[i]:
-                if instance.get_individual() in setlist[:split_index]:
-                    querylist.append(instance)
-                else:
-                    gallerylist.append(instance)
-
-            gallery_images[i] = gallerylist
-            query_images[i] = querylist
         
+        test_images[split_id] = self._get_dataset_images(track_fold_info[split_id])
 
+        # get tracklet and id combination of test_images[split_id]
+        temp_test_images = test_images[split_id]
 
-        # Sanity check for debugging
-        '''
-        separator = '-' * 50
-        print(separator)
-        print("Evaluating fold values:")
+        temp_test_images_set = set(temp_test_images)
+        train_images[split_id] = list(all_images_set - temp_test_images_set)
 
-        for i in range(1, fold_amount+1):
-            print("Fold: ", i)
-            print(f"All images: {len(all_images):>9}")
-            print(f"Train images: {len(train_images[i]):>9}")
-            print(f"Test images: {len(test_images[i]):>9}")
-            print(f"Query images: {len(query_images[i]):>7}")
-            print(f"Gallery images: {len(gallery_images[i]):>5}")
-            if(len(train_images[i])+len(test_images[i]) == len(all_images)):
-                print("Image numbers match")
+        # TODO: Query should get assigned dynamically
+        setlist = []
+        for instance in test_images[split_id]:
+            setlist.append(instance.get_individual())
+        setlist = list(set(setlist))
+        split_index = round(len(setlist) * 0.2)
+
+        querylist = []
+        gallerylist = []
+        for instance in test_images[split_id]:
+            if instance.get_individual() in setlist[:split_index]:
+                querylist.append(instance)
             else:
-                print("WARNING: Image numbers do not match")
-            print(separator)
-        '''
+                gallerylist.append(instance)
+
+        gallery_images[split_id] = gallerylist
+        query_images[split_id] = querylist
+        
 
         train = {}
         num_train_tracklets = {}
@@ -142,68 +121,68 @@ class PolarBearVidID(BaseImageDataset):
         num_total_pids = {}
         num_total_tracklets = {}
 
-        for i in range(1, fold_amount+1):
-            train[i], num_train_tracklets[i], num_train_pids[i], num_train_imgs[i] = \
-            self._process_data(train_images[i])
+        
+        train[split_id], num_train_tracklets[split_id], num_train_pids[split_id], num_train_imgs[split_id] = \
+        self._process_data(train_images[split_id])
 
-            query[i], num_query_tracklets[i], num_query_pids[i], num_query_imgs[i] = \
-            self._process_data(query_images[i])
+        query[split_id], num_query_tracklets[split_id], num_query_pids[split_id], num_query_imgs[split_id] = \
+        self._process_data(query_images[split_id])
 
-            gallery[i], num_gallery_tracklets[i], num_gallery_pids[i], num_gallery_imgs[i] = \
-            self._process_data(gallery_images[i])
+        gallery[split_id], num_gallery_tracklets[split_id], num_gallery_pids[split_id], num_gallery_imgs[split_id] = \
+        self._process_data(gallery_images[split_id])
 
-            train_img[i], _, _ = \
-            self._extract_1stfeame(train_images[i])
+        train_img[split_id], _, _ = \
+        self._extract_1stfeame(train_images[split_id])
 
-            query_img[i], _, _ = \
-            self._extract_1stfeame(query_images[i])
+        query_img[split_id], _, _ = \
+        self._extract_1stfeame(query_images[split_id])
 
-            gallery_img[i], _, _ = \
-            self._extract_1stfeame(gallery_images[i])
+        gallery_img[split_id], _, _ = \
+        self._extract_1stfeame(gallery_images[split_id])
 
-            num_imgs_per_tracklet[i] = num_train_imgs[i] + num_gallery_imgs[i] + num_query_imgs[i]
+        num_imgs_per_tracklet[split_id] = num_train_imgs[split_id] + num_gallery_imgs[split_id] + num_query_imgs[split_id]
 
-            total_num[i] = np.sum(num_imgs_per_tracklet[i])
-            min_num[i] = np.min(num_imgs_per_tracklet[i])
-            max_num[i] = np.max(num_imgs_per_tracklet[i])
-            avg_num[i] = np.mean(num_imgs_per_tracklet[i])
+        total_num[split_id] = np.sum(num_imgs_per_tracklet[split_id])
+        min_num[split_id] = np.min(num_imgs_per_tracklet[split_id])
+        max_num[split_id] = np.max(num_imgs_per_tracklet[split_id])
+        avg_num[split_id] = np.mean(num_imgs_per_tracklet[split_id])
 
-            num_total_pids[i] = max(num_train_pids[i], num_query_pids[i])
-            num_total_tracklets[i] = num_train_tracklets[i] + num_gallery_tracklets[i] + num_query_tracklets[i]
+        num_total_pids[split_id] = max(num_train_pids[split_id], num_query_pids[split_id])
+        num_total_tracklets[split_id] = num_train_tracklets[split_id] + num_gallery_tracklets[split_id] + num_query_tracklets[split_id]
 
-        print("=> PolarBearVidID loaded")
-        print("Dataset statistics:")
+        if split_id == 1:
+            print("=> PolarBearVidID loaded")
+            print("Dataset statistics:")
+            print("  ------------------------------------------")
+            print("  Subset    | # Ids | # Tracklets | # Images")
+            print("  ------------------------------------------")
+
+        
+        print("  {}. Fold:".format(split_id))
         print("  ------------------------------------------")
-        print("  Subset    | # Ids | # Tracklets | # Images")
+        print("  Train {}   | {:5d} | {:8d} | {:8d}".format(split_id, num_train_pids[split_id], num_train_tracklets[split_id], np.sum(num_train_imgs[split_id])))
+        print("  Query {}   | {:5d} | {:8d} | {:8d}".format(split_id, num_query_pids[split_id], num_query_tracklets[split_id], np.sum(num_query_imgs[split_id])))
+        print("  Gallery {} | {:5d} | {:8d} | {:8d}".format(split_id, num_gallery_pids[split_id], num_gallery_tracklets[split_id], np.sum(num_gallery_imgs[split_id])))
+        print("  ------------------------------------------")
+        print("  Total     | {:5d} | {:8d} | {:8d}".format(num_total_pids[split_id], num_total_tracklets[split_id], total_num[split_id]))
+        print("  ------------------------------------------")
+        print("  Number of images per tracklet: {} ~ {}, average {:.1f}".format(min_num[split_id], max_num[split_id], avg_num[split_id]))
+
+        if(len(train_images[split_id])+len(test_images[split_id]) == len(all_images)):
+            print("  Image numbers match")
+        else:
+            print("  WARNING: Image numbers do not match")
         print("  ------------------------------------------")
 
-        for i in range(1, fold_amount+1):
-            print("  {}. Fold:".format(i))
-            print("  ------------------------------------------")
-            print("  Train {}   | {:5d} | {:8d} | {:8d}".format(i, num_train_pids[i], num_train_tracklets[i], np.sum(num_train_imgs[i])))
-            print("  Query {}   | {:5d} | {:8d} | {:8d}".format(i, num_query_pids[i], num_query_tracklets[i], np.sum(num_query_imgs[i])))
-            print("  Gallery {} | {:5d} | {:8d} | {:8d}".format(i, num_gallery_pids[i], num_gallery_tracklets[i], np.sum(num_gallery_imgs[i])))
-            print("  ------------------------------------------")
-            print("  Total     | {:5d} | {:8d} | {:8d}".format(num_total_pids[i], num_total_tracklets[i], total_num[i]))
-            print("  ------------------------------------------")
-            print("  Number of images per tracklet: {} ~ {}, average {:.1f}".format(min_num[i], max_num[i], avg_num[i]))
-
-            if(len(train_images[i])+len(test_images[i]) == len(all_images)):
-                print("  Image numbers match")
-            else:
-                print("  WARNING: Image numbers do not match")
-            print("  ------------------------------------------")
 
 
-        # TODO for now fixed to the first fold later get all folds
+        self.train = train[split_id]
+        self.query = query[split_id]
+        self.gallery = gallery[split_id]
 
-        self.train = train[1]
-        self.query = query[1]
-        self.gallery = gallery[1]
-
-        self.train_img = train_img[1]
-        self.query_img = query_img[1]
-        self.gallery_img = gallery_img[1]
+        self.train_img = train_img[split_id]
+        self.query_img = query_img[split_id]
+        self.gallery_img = gallery_img[split_id]
 
         self.num_train_pids, self.num_train_imgs, self.num_train_cams, self.num_train_vids = self.get_imagedata_info(
             self.train)

@@ -539,6 +539,18 @@ class PiT(nn.Module):
             except:
                 print('===========================ERROR=========================')
                 print('shape do not match in k :{}: param_dict{} vs self.state_dict(){}'.format(k, v.shape, self.state_dict()[k].shape))
+            
+            #TODO FIX FROM HERE
+            # if k not in self.state_dict():
+            #     print('KeyError: {} not found in saved model, removing from state_dict'.format(k))
+            #     continue
+            # try:
+            #     self.state_dict()[k].copy_(v)
+            # except:
+            #     print('===========================ERROR=========================') 
+            #     print('shape do not match in k :{}: param_dict{} vs self.state_dict(){}'.format(k, v.shape, self.state_dict()[k].shape))
+            # TODO FIX TO HERE
+
 
 class MeanAggregator(nn.Module):
 

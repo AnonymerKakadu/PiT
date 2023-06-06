@@ -56,24 +56,36 @@ def make_dataloader(cfg):
     pin_memory = True
 
     if cfg.DATASETS.NAMES in ['ilids', 'prid']:
-        dataset_10trails = []
+        dataset_10trials = []
         for i in range(10):
             dataset = __factory[cfg.DATASETS.NAMES](root=cfg.DATASETS.ROOT_DIR, split_id=i)
-            dataset_10trails.append(dataset)
+            dataset_10trials.append(dataset)
+
+    if cfg.DATASETS.NAMES in ['polarbearvidid']:
+        dataset_5trials = []
+        for i in range(1, 2): # TODO Change 2 to 6 for all folds
+            dataset = __factory[cfg.DATASETS.NAMES](root=cfg.DATASETS.ROOT_DIR, split_id=i)
+            dataset_5trials.append(dataset)
     else:
         dataset = __factory[cfg.DATASETS.NAMES](root=cfg.DATASETS.ROOT_DIR)
 
-    if cfg.DATASETS.NAMES in ['mars', 'duke-video-reid','polarbearvidid']:
+    if cfg.DATASETS.NAMES in ['mars', 'duke-video-reid']:
         s_tr_train, t_tr_train = get_transforms(True, cfg)
         train_set = VideoDataset(dataset.train, spatial_transform=s_tr_train,
                                  temporal_transform=t_tr_train)
+    elif cfg.DATASETS.NAMES in ['polarbearvidid']:
+        s_tr_train, t_tr_train = get_transforms(True, cfg)
+        train_set = [VideoDataset(i.train, spatial_transform=s_tr_train,
+                                 temporal_transform=t_tr_train) for i in dataset_5trials]
+        
     elif cfg.DATASETS.NAMES in ['ilids', 'prid']:
         s_tr_train, t_tr_train = get_transforms(True, cfg)
         train_set = [VideoDataset(i.train, spatial_transform=s_tr_train,
-                                 temporal_transform=t_tr_train) for i in dataset_10trails]
+                                 temporal_transform=t_tr_train) for i in dataset_10trials]
     else:
         train_set = ImageDataset(dataset.train, train_transforms)
         train_set_normal = ImageDataset(dataset.train, val_transforms)
+
     num_classes = dataset.num_train_pids
     cam_num = dataset.num_train_cams
     view_num = dataset.num_train_vids
@@ -92,7 +104,7 @@ def make_dataloader(cfg):
                 pin_memory=True,
             )
         else:
-            if cfg.DATASETS.NAMES in ['mars','polarbearvidid']:
+            if cfg.DATASETS.NAMES in ['mars']:
                 train_loader = [DataLoader(
                     train_set, batch_sampler=ReIDBatchSampler(dataset.train, p=cfg.DATALOADER.P,
                                                               k=cfg.DATALOADER.K),
@@ -105,7 +117,14 @@ def make_dataloader(cfg):
                                                               k=cfg.DATALOADER.K),
                     num_workers=num_workers, collate_fn=train_collate_fn, worker_init_fn=init_worker,
                     pin_memory=pin_memory
-                ) for i,j in zip(train_set, dataset_10trails)]
+                ) for i,j in zip(train_set, dataset_10trials)]
+            elif cfg.DATASETS.NAMES in ['polarbearvidid']:
+                train_loader = [DataLoader(
+                    i, batch_sampler=ReIDBatchSampler(j.train, p=cfg.DATALOADER.P,
+                                                              k=cfg.DATALOADER.K),
+                    num_workers=num_workers, collate_fn=train_collate_fn, worker_init_fn=init_worker,
+                    pin_memory=pin_memory
+                ) for i,j in zip(train_set, dataset_5trials)]
             else:
                 train_loader = DataLoader(
                     train_set, batch_size=cfg.SOLVER.IMS_PER_BATCH,
@@ -122,7 +141,7 @@ def make_dataloader(cfg):
     else:
         print('unsupported sampler! expected softmax or triplet but got {}'.format(cfg.SAMPLER))
 
-    if cfg.DATASETS.NAMES in ['mars','polarbearvidid']:
+    if cfg.DATASETS.NAMES in ['mars']:
         s_tr_test, t_tr_test = get_transforms(False, cfg)
 
         val_set = VideoDataset(dataset.query + dataset.gallery, spatial_transform=s_tr_test,
@@ -136,12 +155,24 @@ def make_dataloader(cfg):
         s_tr_test, t_tr_test = get_transforms(False, cfg)
 
         val_set = [VideoDataset(i.query + i.gallery, spatial_transform=s_tr_test,
-                               temporal_transform=t_tr_test) for i in dataset_10trails]
+                               temporal_transform=t_tr_test) for i in dataset_10trials]
         val_loader = [DataLoader(
             i, batch_size=cfg.TEST.TEST_BATCH, shuffle=False, num_workers=2,
             pin_memory=pin_memory, drop_last=False, worker_init_fn=init_worker,
             collate_fn=val_collate_fn
         ) for i in val_set]
+
+    elif cfg.DATASETS.NAMES in ['polarbearvidid']:
+        s_tr_test, t_tr_test = get_transforms(False, cfg)
+
+        val_set = [VideoDataset(i.query + i.gallery, spatial_transform=s_tr_test,
+                               temporal_transform=t_tr_test) for i in dataset_5trials]
+        val_loader = [DataLoader(
+            i, batch_size=cfg.TEST.TEST_BATCH, shuffle=False, num_workers=2,
+            pin_memory=pin_memory, drop_last=False, worker_init_fn=init_worker,
+            collate_fn=val_collate_fn
+        ) for i in val_set]
+
     else:
         val_set = ImageDataset(dataset.query + dataset.gallery, val_transforms)
 

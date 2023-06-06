@@ -67,16 +67,20 @@ if __name__ == '__main__':
     train_loader, val_loader, num_query, num_classes, camera_num, view_num = make_dataloader(cfg)
 
     if cfg.DATASETS.NAMES in ['ilids']:
-        num_trails = 10
+        num_trials = 10
+    elif cfg.DATASETS.NAMES in ['polarbearvidid']:
+        num_trials = 5
     else:
-        num_trails = 1
+        num_trials = 1
     cmcs, mAPs = [], []
-    for i in range(num_trails):
+    for i in range(num_trials):
         output_dir = cfg.OUTPUT_DIR + '/' + str(i + 1)
         test_weight = cfg.TEST.WEIGHT + '/' + str(i + 1)
 
         saver = Saver(output_dir, f'tensorboard')
+
         model = make_model(cfg, num_class=num_classes, camera_num=camera_num, view_num = view_num)
+        
         test = os.path.isdir(test_weight)
         if test:
             model.load_param(os.path.join(test_weight, 'transformer_' + str(120) + '.pth'))
@@ -115,7 +119,7 @@ if __name__ == '__main__':
         mAPs.append(mAP)
     mAP = np.stack(mAPs).mean(axis=0)
     cmc = np.stack(cmcs).mean(axis=0)
-    logger.info("{} trails average:".format(num_trails))
+    logger.info("{} trails average:".format(num_trials))
     logger.info("mAP: {:.3%}".format(mAP))
     for r in [1, 5, 10, 20]:
         logger.info("CMC curve, Rank-{:<3}:{:.3%}".format(r, cmc[r - 1]))

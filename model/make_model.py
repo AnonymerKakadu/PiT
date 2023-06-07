@@ -130,7 +130,7 @@ class build_transformer(nn.Module):
         self.neck = cfg.MODEL.NECK
         self.neck_feat = cfg.TEST.NECK_FEAT
         self.in_planes = 768
-        self.isVideo = True if cfg.DATASETS.NAMES in ['mars', 'duke-video-reid', 'ilids', 'prid'] else False
+        self.isVideo = True if cfg.DATASETS.NAMES in ['mars', 'duke-video-reid', 'ilids', 'prid','polarbearvidid'] else False
 
         print('using Transformer_type: {} as a backbone'.format(cfg.MODEL.TRANSFORMER_TYPE))
 
@@ -224,7 +224,7 @@ class build_transformer_local(nn.Module):
         self.neck = cfg.MODEL.NECK
         self.neck_feat = cfg.TEST.NECK_FEAT
         self.in_planes = 768
-        self.isVideo = True if cfg.DATASETS.NAMES in ['mars', 'duke-video-reid', 'ilids', 'prid'] else False
+        self.isVideo = True if cfg.DATASETS.NAMES in ['mars', 'duke-video-reid', 'ilids', 'prid','polarbearvidid'] else False
         self.spatial = cfg.MODEL.SPATIAL
         self.temporal = cfg.MODEL.TEMPORAL
         self.diversity = cfg.MODEL.DIVERSITY

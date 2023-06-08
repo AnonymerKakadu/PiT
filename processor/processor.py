@@ -43,7 +43,7 @@ def do_train(cfg,
     evaluator = R1_mAP_eval(num_query, max_rank=50, feat_norm=cfg.TEST.FEAT_NORM)
 
     scaler = amp.GradScaler()
-    isVideo = True if cfg.DATASETS.NAMES in ['mars', 'duke-video-reid', 'ilids', 'prid'] else False
+    isVideo = True if cfg.DATASETS.NAMES in ['mars', 'duke-video-reid', 'ilids', 'prid', 'polarbearvidid'] else False
     freeze_layers = ['base', 'pyramid_layer']
     freeze_epochs = cfg.SOLVER.WARMUP_EPOCHS
     freeze_or_not = cfg.MODEL.FREEZE

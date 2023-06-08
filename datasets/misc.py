@@ -75,11 +75,13 @@ def get_transforms(train_mode: bool, cfg: Namespace):
 
     input_res = {
         'mars': (256, 128),
+        'polarbearvidid': (128, 256),# (256, 128), # TODO change to 128, 256
         'ilids': (256, 128),
     }.get(cfg.DATASETS.NAMES, (224, 224))
 
     erase_ratio = {
         'mars': (0.3, 3.3),
+        'polarbearvidid': (0.3, 3.3),
         'ilids': (0.3, 3.3),
     }.get(cfg.DATASETS.NAMES, (0.7, 1.4))
 
@@ -87,6 +89,7 @@ def get_transforms(train_mode: bool, cfg: Namespace):
 
     resize_operation = {
         'mars': T.Resize(input_res, interpolation=3),
+        'polarbearvidid': T.Resize(input_res, interpolation=3),
         'ilids': T.Resize(input_res, interpolation=3),
     }.get(cfg.DATASETS.NAMES, AdaptiveResize(height=input_res[0], width=input_res[1]))
 

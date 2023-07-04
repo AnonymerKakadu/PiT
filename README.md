@@ -2,9 +2,9 @@
 ![LICENSE](https://img.shields.io/badge/license-GPL%202.0-green) ![Python](https://img.shields.io/badge/python-3.6-blue.svg) ![pytorch](https://img.shields.io/badge/pytorch-1.8.1-orange) 
 [![PWC](https://img.shields.io/endpoint.svg?url=https://paperswithcode.com/badge/multi-direction-and-multi-scale-pyramid-in-1/person-re-identification-on-ilids-vid)](https://paperswithcode.com/sota/person-re-identification-on-ilids-vid?p=multi-direction-and-multi-scale-pyramid-in-1) [![PWC](https://img.shields.io/endpoint.svg?url=https://paperswithcode.com/badge/multi-direction-and-multi-scale-pyramid-in-1/person-re-identification-on-mars)](https://paperswithcode.com/sota/person-re-identification-on-mars?p=multi-direction-and-multi-scale-pyramid-in-1)
 
-Implementation of the proposed PiT used on the PolarBearVidID Dataset. Please refer to [[MDPI]](https://www.mdpi.com/2076-2615/13/5/801)).
+Implementation of the proposed PiT used on the PolarBearVidID Dataset. Please refer to [[MDPI]](https://www.mdpi.com/2076-2615/13/5/801).
 
-![dataset](./Dataset.png)
+![dataset](./dataset.png)
 ![framework](./framework.jpg)
 
 
@@ -23,7 +23,7 @@ $ pip install timm scipy einops yacs opencv-python tensorboard pandas
 The pre-trained vit model can be downloaded in this [link](https://github.com/rwightman/pytorch-image-models/releases/download/v0.1-vitjx/jx_vit_base_p16_224-80ecf9dd.pth) and should be put in the `checkpoints/` directory.
 
 ### Dataset Preparation
-Download PolarBearVidID Dataset at [PolarBearVidID](https://github.com/deropty/PiT) and store it in the `Data/` Directory.
+Download PolarBearVidID Dataset at [PolarBearVidID](https://zenodo.org/record/7564529) and store it in the `data/` Directory.
 
 ## Training and Testing
 ```
@@ -74,7 +74,7 @@ If you find this project useful for your research, please kindly cite:
 	file = {Full Text:/Users/nilssteinlein/Zotero/storage/PN9PN3FL/Zuerl et al. - 2023 - PolarBearVidID A Video-Based Re-Identification Be.pdf:application/pdf},
 }
 ```
-And the original authors of the 
+And the original authors of PiT
 
 ```
 @ARTICLE{9714137,

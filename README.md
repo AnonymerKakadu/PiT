@@ -4,7 +4,7 @@
 
 Implementation of the proposed PiT used on the PolarBearVidID Dataset. Please refer to [[MDPI]](https://www.mdpi.com/2076-2615/13/5/801).
 
-![dataset](./dataset.png)
+![dataset](./Dataset.png)
 ![framework](./framework.jpg)
 
 

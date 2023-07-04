@@ -294,7 +294,7 @@ class PolarBearVidID(BaseImageDataset):
             individual_tracklet = sorted(individual_tracklet, key=lambda x: x.frame)
             for frame in individual_tracklet:
                 if camid == -1:
-                    camid = frame.camera
+                    camid = frame.camera -1 # camera 1 is 0 according to previous code
                 if id == -1:
                     id = frame.id
                 image_list.append(frame.path)
@@ -325,7 +325,7 @@ class PolarBearVidID(BaseImageDataset):
         for individual_tracklet in images_grouped:
             individual_tracklet = sorted(individual_tracklet, key=lambda x: x.frame)
             idlist.append(individual_tracklet[0].id)
-            imgs.append(([individual_tracklet[0].path], individual_tracklet[0].id, individual_tracklet[0].camera))
+            imgs.append(([individual_tracklet[0].path], individual_tracklet[0].id, individual_tracklet[0].camera - 1))
             
         num_pids = len(set(idlist))
         num_imgs = len(imgs)

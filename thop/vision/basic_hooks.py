@@ -120,7 +120,7 @@ def count_adap_avgpool(m, x, y):
     m.total_ops += counter_adap_avg(total_add, num_elements)
 
 
-# TODO: verify the accuracy
+# Old TO DO: verify the accuracy
 def count_upsample(m, x, y):
     if m.mode not in (
         "nearest",

@@ -63,7 +63,7 @@ def make_dataloader(cfg):
 
     if cfg.DATASETS.NAMES in ['polarbearvidid']:
         dataset_5trials = []
-        for i in range(1, 2): # TODO Change 2 to 6 for all folds
+        for i in range(1, 2): # TODO Performance Change 2 to 6 for all folds
             dataset = __factory[cfg.DATASETS.NAMES](root=cfg.DATASETS.ROOT_DIR, split_id=i)
             dataset_5trials.append(dataset)
     else:

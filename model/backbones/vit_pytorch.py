@@ -5,7 +5,7 @@ A PyTorch implement of Vision Transformers as described in
 
 The official jax code is released and available at https://github.com/google-research/vision_transformer
 
-Status/TODO:
+Status:
 * Models updated to be compatible with official impl. Args added to support backward compat for old PyTorch weights.
 * Weights ported from official jax impl for 384x384 base and small models, 16x16 and 32x32 patches.
 * Trained (supervised on ImageNet-1k) my custom 'small' patch model to 77.9, 'base' to 79.4 top-1 with this code.

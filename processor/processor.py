@@ -22,13 +22,13 @@ def do_train(cfg,
     checkpoint_period = cfg.SOLVER.CHECKPOINT_PERIOD
     eval_period = cfg.SOLVER.EVAL_PERIOD
 
-    device = "cuda"
+    device = "cuda" # TODO CPU: on GPU use device = "cuda" on CPU use device = "cpu" 
     epochs = cfg.SOLVER.MAX_EPOCHS
 
     logger = logging.getLogger("pit.train")
     logger.info('start training')
     _LOCAL_PROCESS_GROUP = None
-    if device:
+    if device: # and False: # TODO CPU  Comment in to use CPU
         model.to(local_rank)
         if torch.cuda.device_count() > 1 and cfg.MODEL.DIST_TRAIN:
             print('Using {} GPUs for training'.format(torch.cuda.device_count()))

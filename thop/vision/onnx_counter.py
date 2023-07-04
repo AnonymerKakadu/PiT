@@ -202,7 +202,7 @@ def onnx_counter_softmax(diction, node):
 
 
 def onnx_counter_pad(diction, node):
-    # # TODO add constant name and output real vector
+    # # Old TO DO:  add constant name and output real vector
     # if
     # if (np.array(diction[node.input[1]]).size >= np.array(diction[node.input[0]]).size):
     #     input_size = diction[node.input[1]]
@@ -216,7 +216,7 @@ def onnx_counter_pad(diction, node):
 
 
 def onnx_counter_averagepool(diction, node):
-    # TODO add support of ceil_mode and floor
+    # Old TO DO:  add support of ceil_mode and floor
     macs = counter_avgpool(np.prod(diction[node.input[0]]))
     output_name = node.output[0]
     dim_pad = None
@@ -270,7 +270,7 @@ def onnx_counter_gemm(diction, node):
 
 
 def onnx_counter_maxpool(diction, node):
-    # TODO add support of ceil_mode and floor
+    # Old TO DO:  add support of ceil_mode and floor
     # print(node)
     macs = counter_zero_ops()
     output_name = node.output[0]

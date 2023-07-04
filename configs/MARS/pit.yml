@@ -6,7 +6,7 @@ MODEL:
   IF_WITH_CENTER: 'no'
   NAME: 'transformer'
   NO_MARGIN: True
-  DEVICE_ID: ('6')
+  DEVICE_ID: ('6') # ('6') # # 'cpu'
   TRANSFORMER_TYPE: 'vit_base_patch16_224_PiT'
   STRIDE_SIZE: [12, 12]
   SIE_CAMERA: True   # original

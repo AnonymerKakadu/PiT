@@ -23,8 +23,8 @@ MODEL:
   LAYER1_DIVISION_TYPE: '3x70'
   PYRAMID2_TYPE: 'vertical'
   LAYER2_DIVISION_TYPE: '105x2'
-  PYRAMID3_TYPE: 'patch'
-  LAYER3_DIVISION_TYPE: '6p'
+  PYRAMID3_TYPE: 'patch' #'vertical' #'patch'
+  LAYER3_DIVISION_TYPE: '1x210' #'105x2' #'6p'
   PYRAMID4_TYPE: 'horizontal'
   LAYER4_DIVISION_TYPE: 'NULL'
   LAYER_COMBIN: 4         # use how many layers of pyramid

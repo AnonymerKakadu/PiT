@@ -30,7 +30,12 @@ Download PolarBearVidID Dataset at [PolarBearVidID](https://zenodo.org/record/75
 # This command below includes the training and testing processes.
 $ python train.py --config_file configs/PolarBearVidID/pit.yml MODEL.DEVICE_ID "('0')" 
 # For testing only
-$ python train.py --config_file configs/PolarBearVidID/pit.yml MODEL.DEVICE_ID "('0')" 
+$ python train.py --config_file configs/PolarBearVidID/pit-test.yml MODEL.DEVICE_ID "('0')" 
+```
+
+## Visualize findings
+```
+tensorboard --logdir_spec fold1:logs\PolarBearVidID_PiT\1,fold2:logs\PolarBearVidID_PiT\2,fold3:logs\PolarBearVidID_PiT\3,fold4:logs\PolarBearVidID_PiT\4,fold5:logs\PolarBearVidID_PiT\5
 ```
 
 
@@ -44,7 +49,7 @@ The results of MARS and iLIDS-VID are trained using one 24G NVIDIA GPU and provi
 | PiT |  [90.22](https://pan.baidu.com/s/1nw5yofEilW0ffG_ZF4eoXQ) (code:wqxv)|  [92.07](https://pan.baidu.com/s/10LosWwUMktTiWvbHEP1Tjw) (code: quci)|
 
 You can download these models and put them in the `../logs/[DATASET]_PiT_1x210_3x70_105x2_6p` directory. Then use the command below to evaluate them.
- ```
+```
 $ python test.py --config_file configs/PolarBearVidID/pit.yml MODEL.DEVICE_ID "('0')" 
 ```
 
@@ -70,8 +75,7 @@ If you find this project useful for your research, please kindly cite:
 	author = {Zuerl, Matthias and Dirauf, Richard and Koeferl, Franz and Steinlein, Nils and Sueskind, Jonas and Zanca, Dario and Brehm, Ingrid and Fersen, Lorenzo von and Eskofier, Bjoern},
 	month = feb,
 	year = {2023},
-	pages = {801},
-	file = {Full Text:/Users/nilssteinlein/Zotero/storage/PN9PN3FL/Zuerl et al. - 2023 - PolarBearVidID A Video-Based Re-Identification Be.pdf:application/pdf},
+	pages = {801}
 }
 ```
 And the original authors of PiT

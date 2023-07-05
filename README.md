@@ -2,7 +2,7 @@
 ![LICENSE](https://img.shields.io/badge/license-GPL%202.0-green) ![Python](https://img.shields.io/badge/python-3.6-blue.svg) ![pytorch](https://img.shields.io/badge/pytorch-1.8.1-orange) 
 [![PWC](https://img.shields.io/endpoint.svg?url=https://paperswithcode.com/badge/multi-direction-and-multi-scale-pyramid-in-1/person-re-identification-on-ilids-vid)](https://paperswithcode.com/sota/person-re-identification-on-ilids-vid?p=multi-direction-and-multi-scale-pyramid-in-1) [![PWC](https://img.shields.io/endpoint.svg?url=https://paperswithcode.com/badge/multi-direction-and-multi-scale-pyramid-in-1/person-re-identification-on-mars)](https://paperswithcode.com/sota/person-re-identification-on-mars?p=multi-direction-and-multi-scale-pyramid-in-1)
 
-Implementation of the proposed PiT used on the PolarBearVidID Dataset. Please refer to [[MDPI]](https://www.mdpi.com/2076-2615/13/5/801).
+Implementation of the proposed PiT used on the PolarBearVidID Dataset. Please refer to [[PolarBearVidID @ MDPI]](https://www.mdpi.com/2076-2615/13/5/801) and [[PiT @ Arxiv]](https://arxiv.org/pdf/2202.06014.pdf).
 
 ![dataset](./Dataset.png)
 ![framework](./framework.jpg)

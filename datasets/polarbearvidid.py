@@ -80,16 +80,20 @@ class PolarBearVidID(BaseImageDataset):
         train_images[split_id] = list(all_images_set - temp_test_images_set)
 
         # TODO: Query should get assigned dynamically
-        setlist = []
+        setlist = [[] for _ in range(13)]
         for instance in test_images[split_id]:
-            setlist.append(instance.get_individual())
-        setlist = list(set(setlist))
-        split_index = round(len(setlist) * 0.2)
+            id = instance.get_individual()[0]
+            setlist[id].append(instance.get_individual())
+
+        split_index = [0] * len(setlist)
+        for i in range(len(setlist)):
+            setlist[i] = list(set(setlist[i]))
+            split_index[i] = round(len(setlist[i]) * 0.2)
 
         querylist = []
         gallerylist = []
         for instance in test_images[split_id]:
-            if instance.get_individual() in setlist[:split_index]:
+            if instance.get_individual() in setlist[instance.get_individual()[0]][:split_index[instance.get_individual()[0]]]:
                 querylist.append(instance)
             else:
                 gallerylist.append(instance)

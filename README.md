@@ -35,11 +35,18 @@ $ python train.py --config_file configs/PolarBearVidID/pit-test.yml MODEL.DEVICE
 
 ## Visualize findings
 ```
-tensorboard --logdir_spec fold1:logs\PolarBearVidID_PiT\1,fold2:logs\PolarBearVidID_PiT\2,fold3:logs\PolarBearVidID_PiT\3,fold4:logs\PolarBearVidID_PiT\4,fold5:logs\PolarBearVidID_PiT\5
+$ tensorboard --logdir_spec fold1:logs\PolarBearVidID_PiT\1,fold2:logs\PolarBearVidID_PiT\2,fold3:logs\PolarBearVidID_PiT\3,fold4:logs\PolarBearVidID_PiT\4,fold5:logs\PolarBearVidID_PiT\5
 ```
 
 
 ## Results in the Paper
+TODO
+2023-07-05 23:37:19,664 pit INFO: 5 trails average:
+2023-07-05 23:37:19,665 pit INFO: mAP: 18.366%
+2023-07-05 23:37:19,665 pit INFO: CMC curve, Rank-1  :12.274%
+2023-07-05 23:37:19,665 pit INFO: CMC curve, Rank-5  :29.364%
+2023-07-05 23:37:19,665 pit INFO: CMC curve, Rank-10 :47.281%
+2023-07-05 23:37:19,665 pit INFO: CMC curve, Rank-20 :59.931%
 TODO
 
 The results of MARS and iLIDS-VID are trained using one 24G NVIDIA GPU and provided below. You can change the parameter `DATALOADER.P` in yml file to decrease the GPU memory cost.
@@ -49,7 +56,7 @@ The results of MARS and iLIDS-VID are trained using one 24G NVIDIA GPU and provi
 | PiT |  [90.22](https://pan.baidu.com/s/1nw5yofEilW0ffG_ZF4eoXQ) (code:wqxv)|  [92.07](https://pan.baidu.com/s/10LosWwUMktTiWvbHEP1Tjw) (code: quci)|
 
 You can download these models and put them in the `../logs/[DATASET]_PiT_1x210_3x70_105x2_6p` directory. Then use the command below to evaluate them.
-```
+ ```
 $ python test.py --config_file configs/PolarBearVidID/pit.yml MODEL.DEVICE_ID "('0')" 
 ```
 

@@ -118,9 +118,10 @@ if __name__ == '__main__':
         cmcs.append(cmc)
         mAPs.append(mAP)
     mAP = np.stack(mAPs).mean(axis=0)
+    mAP_std = np.stack(mAPs).std(axis=0)
     cmc = np.stack(cmcs).mean(axis=0)
-    logger.info("{} trails average:".format(num_trials))
-    logger.info("mAP: {:.3%}".format(mAP))
-    for r in [1, 5, 10, 20]:
+    logger.info("{} folds average:".format(num_trials))
+    logger.info("mAP: {:.3%}, Standard deviation: {:.3%}".format(mAP, mAP_std))
+    for r in [1, 5, 10]:
         logger.info("CMC curve, Rank-{:<3}:{:.3%}".format(r, cmc[r - 1]))
 

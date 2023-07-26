@@ -332,8 +332,8 @@ class build_transformer_local(nn.Module):
             # different division strategy
             if self.pyramid_type[i] == 'patch':
                 if self.layer_division_num[i] == 6:
-                    local_feats = [feature[:, :, m * 7:(m + 1) * 7, n * 5:(n + 1) * 5, :].reshape(B, N, 35, -1)
-                                  for m in range(3) for n in range(2)]
+                    local_feats = [feature[:, :, m * 5:(m + 1) * 5, n * 7:(n + 1) * 7, :].reshape(B, N, 35, -1)
+                                  for m in range(2) for n in range(3)]
                 elif self.layer_division_num[i] == 14:
                     local_feats = [feature[:, :, m * 3:(m + 1) * 3, n * 5:(n + 1) * 5, :].reshape(B, N, 15, -1)
                                   for m in range(7) for n in range(2)]

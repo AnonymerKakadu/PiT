@@ -122,6 +122,6 @@ if __name__ == '__main__':
     cmc = np.stack(cmcs).mean(axis=0)
     logger.info("{} folds average:".format(num_trials))
     logger.info("mAP: {:.3%}, Standard deviation: {:.3%}".format(mAP, mAP_std))
-    for r in [1, 5, 10]:
+    for r in [1, 5, 10, 20]:
         logger.info("CMC curve, Rank-{:<3}:{:.3%}".format(r, cmc[r - 1]))
 

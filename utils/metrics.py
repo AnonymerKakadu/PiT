@@ -51,13 +51,14 @@ def eval_func(distmat, q_pids, g_pids, q_camids, g_camids, max_rank=50):
         q_camid = q_camids[q_idx]
 
         # remove gallery samples that have the same pid and camid with query
-        order = indices[q_idx]  # select one row
-        remove = (g_pids[order] == q_pid) & (g_camids[order] == q_camid)
-        keep = np.invert(remove)
+        # order = indices[q_idx]  # select one row
+        # remove = (g_pids[order] == q_pid) & (g_camids[order] == q_camid)
+        # keep = np.invert(remove)
+        
 
         # compute cmc curve
         # binary vector, positions with value 1 are correct matches
-        orig_cmc = matches[q_idx][keep]
+        orig_cmc = matches[q_idx] #[keep]
         if not np.any(orig_cmc):
             # this condition is true when query identity does not appear in gallery
             All_AP.append('None')

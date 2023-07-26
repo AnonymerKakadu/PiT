@@ -173,12 +173,12 @@ def do_train(cfg,
                 cmc, mAP, _,  _, _, _, _ = evaluator.compute()
                 logger.info("Validation Results - Epoch: {}".format(epoch))
                 logger.info("mAP: {:.3%}".format(mAP))
-                for r in [1, 5, 10]:
+                for r in [1, 5, 10, 20]:
                     logger.info("CMC curve, Rank-{:<3}:{:.3%}".format(r, cmc[r - 1]))
                 torch.cuda.empty_cache()
 
             saver.dump_metric_tb(mAP, epoch, f'v2v', f'mAP')
-            for cmc_v in [1, 5, 10]:
+            for cmc_v in [1, 5, 10, 20]:
                 saver.dump_metric_tb(cmc[cmc_v-1], epoch, f'v2v', f'cmc{cmc_v}')
 
     return cmc, mAP
@@ -223,7 +223,7 @@ def do_inference(cfg,
     cmc, mAP, _, _, _, _, _ = evaluator.compute()
     logger.info("Validation Results ")
     logger.info("mAP: {:.1%}".format(mAP))
-    for r in [1, 5, 10]:
+    for r in [1, 5, 10, 20]:
         logger.info("CMC curve, Rank-{:<3}:{:.1%}".format(r, cmc[r - 1]))
     return cmc[0], cmc[4]
 

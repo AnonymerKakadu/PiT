@@ -75,7 +75,7 @@ def get_transforms(train_mode: bool, cfg: Namespace):
 
     input_res = {
         'mars': (256, 128),
-        'polarbearvidid': (128, 256),# (256, 128), # TODO change to 128, 256
+        'polarbearvidid': (128, 256), # , # TODO change to 128, 256
         'ilids': (256, 128),
     }.get(cfg.DATASETS.NAMES, (224, 224))
 

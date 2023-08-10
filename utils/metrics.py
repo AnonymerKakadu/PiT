@@ -24,6 +24,30 @@ def cosine_similarity(qf, gf):
     dist_mat = np.arccos(dist_mat)
     return dist_mat
 
+def confusion_matrix(pids, distmat):
+    
+    # Assuming that `distmat` is the existing distance matrix
+    # and `pids` is the array of person IDs corresponding to each row in `distmat`
+
+    unique_pids = np.unique(pids)
+    num_pids = len(unique_pids)
+
+    # Initialize the new distance matrix
+    new_distmat = np.zeros((num_pids, num_pids))
+
+    # Compute the new distance matrix
+    for i, pid_i in enumerate(unique_pids):
+        for j, pid_j in enumerate(unique_pids):
+            if i <= j:
+                # Compute the mean distance between all pairs of samples with pid_i and pid_j
+                mask = np.logical_or(pids == pid_i, pids == pid_j)
+                indices = np.where(mask)[0]
+                distances = distmat[indices][:, indices]
+                mean_distance = np.mean(distances)
+                new_distmat[i, j] = mean_distance
+                new_distmat[j, i] = mean_distance
+
+    return new_distmat
 
 def eval_func(distmat, q_pids, g_pids, q_camids, g_camids, max_rank=50):
     """Evaluation with market1501 metric
@@ -50,6 +74,11 @@ def eval_func(distmat, q_pids, g_pids, q_camids, g_camids, max_rank=50):
         q_pid = q_pids[q_idx]
         q_camid = q_camids[q_idx]
 
+        # remove query from gallery samples 
+        #order = indices[q_idx]  # select one row
+        #remove = (g_pids[order] == q_pid) & (g_camids[order] == q_camid)
+        #keep = np.invert(remove)
+
         # remove gallery samples that have the same pid and camid with query
         # order = indices[q_idx]  # select one row
         # remove = (g_pids[order] == q_pid) & (g_camids[order] == q_camid)
@@ -58,7 +87,7 @@ def eval_func(distmat, q_pids, g_pids, q_camids, g_camids, max_rank=50):
 
         # compute cmc curve
         # binary vector, positions with value 1 are correct matches
-        orig_cmc = matches[q_idx] #[keep]
+        orig_cmc = matches[q_idx]# [keep]
         if not np.any(orig_cmc):
             # this condition is true when query identity does not appear in gallery
             All_AP.append('None')
@@ -92,6 +121,11 @@ def eval_func(distmat, q_pids, g_pids, q_camids, g_camids, max_rank=50):
     All_AP = np.asarray(All_AP)
     data = pd.DataFrame({'AP': All_AP})
     data.to_csv('All_AP.csv', index=False, sep=',')
+
+    all_pids = list(set(np.concatenate([q_pids, g_pids])))
+    matrix = confusion_matrix(all_pids, distmat)
+    data = pd.DataFrame({str(i): matrix[:, i] for i in range(matrix.shape[1])})
+    data.to_csv('matrix.csv', index=True, sep=',')
 
     data = pd.DataFrame({str(i): distmat[:, i] for i in range(distmat.shape[1])})
     data.to_csv('distmat.csv', index=True, sep=',')

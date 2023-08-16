@@ -12,25 +12,26 @@ Implementation of the proposed PiT used on the PolarBearVidID Dataset. Please re
 ### Requirements
 Here is a brief instruction for installing the experimental environment.
 ```
-# install virtual envs
+# Windows 10 and 11 (use cmd)
+# install conda (add to path)
 $ conda create -n PiT python=3.6 -y
-$ conda activate PiT
+$ conda activate PiT (Win 11: activate PiT)
 # install pytorch 1.8.1/1.6.0 (other versions may also work)
-$ pip install timm scipy einops yacs opencv-python tensorboard pandas
+$ pip install timm scipy einops yacs opencv-python==4.3.0.36 tensorboard pandas
 ```
 
 ### Download pre-trained model
 The pre-trained vit model can be downloaded in this [link](https://github.com/rwightman/pytorch-image-models/releases/download/v0.1-vitjx/jx_vit_base_p16_224-80ecf9dd.pth) and should be put in the `checkpoints/` directory.
 
 ### Dataset Preparation
-Download PolarBearVidID Dataset at [PolarBearVidID](https://zenodo.org/record/7564529) and store it in the `data/` Directory.
+Download PolarBearVidID Dataset at [PolarBearVidID](https://zenodo.org/record/7564529) and store it in the `data/PolarBearVidID` Directory.
 
 ## Training and Testing
 ```
 # This command below includes the training and testing processes.
-$ python train.py --config_file configs/PolarBearVidID/pit.yml MODEL.DEVICE_ID "('0')" 
+$ python train.py --config_file configs/PolarBearVidID/pit.yml MODEL.DEVICE_ID "('0')"
 # For testing only
-$ python train.py --config_file configs/PolarBearVidID/pit-test.yml MODEL.DEVICE_ID "('0')" 
+$ python train.py --config_file configs/PolarBearVidID/pit-test.yml MODEL.DEVICE_ID "('0')"
 ```
 
 ## Visualize findings

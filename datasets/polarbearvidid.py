@@ -98,7 +98,7 @@ class PolarBearVidID(BaseImageDataset):
             else:
                 gallerylist.append(instance)
 
-        gallery_images[split_id] = gallerylist + querylist # Insert all images into gallery in eval remove current query image
+        gallery_images[split_id] = querylist + gallerylist  # Insert all images into gallery in eval remove current query image
         query_images[split_id] = querylist
         
 

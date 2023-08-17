@@ -120,7 +120,7 @@ class R1_mAP_eval():
         self.pids.extend(np.asarray(pid))
         self.camids.extend(np.asarray(camid))
 
-    def compute(self):  # called after each epoch
+    def compute(self, epoch, split):  # called after each epoch
         feats = torch.cat(self.feats, dim=0)
         if self.feat_norm:
             print("The test feature is normalized")
@@ -129,11 +129,21 @@ class R1_mAP_eval():
         qf = feats[:self.num_query]
         q_pids = np.asarray(self.pids[:self.num_query])
         q_camids = np.asarray(self.camids[:self.num_query])
-        # gallery
-        gf = feats[self.num_query:]
-        g_pids = np.asarray(self.pids[self.num_query:])
+        # gallery is the same
+        gf = qf
+        g_pids = q_pids
+        g_camids = q_camids
+        # write the feature vectors to a file and save it
+        filename = 'feature_vectors_epoch_' + str(epoch)
+        folderpath = os.path.join('logs', 'PolarBearVidID_PiT', 'feature_vectors', 'fold_' + str(split))
+        if not os.path.exists(folderpath):
+            os.makedirs(folderpath)
+            
+        # save to feature file
+        with open(os.path.join(folderpath,filename), 'w') as f:
+            for item in qf.numpy():
+                f.write("%s\n" % item)
 
-        g_camids = np.asarray(self.camids[self.num_query:])
         if self.reranking:
             print('=> Enter reranking')
             # distmat = re_ranking(qf, gf, k1=20, k2=6, lambda_value=0.3)

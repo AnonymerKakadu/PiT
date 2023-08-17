@@ -38,7 +38,7 @@ class PBEvaluation:
     re_rank = False
     simpl_re_rank_count = 0
 
-    zoos = [['Nürnberg', 0, 1], ['Berlin', 2, 3], ['Schönbrunn', 4, 5], ['Mulhouse', 6, 7]]
+    zoos = None  # [['Nürnberg', 0, 1], ['Berlin', 2, 3], ['Schönbrunn', 4, 5], ['Mulhouse', 6, 7]]
     map_per_zoo = {}
     r1_per_zoo = {}
 
@@ -68,6 +68,12 @@ class PBEvaluation:
 
         # load db
         self.track_test_info = pd.read_csv(track_test_file)
+
+        # load zoos
+        animal_db = pd.read_csv(os.path.join(dataset_dir, 'animal_db.csv'))
+        animal_db = animal_db.groupby('zoo')['id'].apply(lambda x: list(x)).reset_index()
+        self.zoos = list(animal_db.apply(lambda x: [x['zoo']] + x['id'], axis=1))
+
         if zoo_ids is not None:
             self.track_test_info = self.track_test_info[self.track_test_info['id'].isin(zoo_ids)]
             # only take the 1 zoo
@@ -274,9 +280,16 @@ class PBEvaluation:
 
         # calc map and r1 divided by zoo
         for z in self.zoos:
-            value = ap_per_id[z[1]] + ap_per_id[z[2]]
+            value_ap, value_cmc = [], []
+            
+            # go through individuals
+            for j in range(1, len(z)):
+                value_ap += ap_per_id[z[j]]
+                value_cmc += cmc_per_id[z[j]]
+
+            # compute map, r1
             self.map_per_zoo[z[0]] = np.sum(value) / len(value)
-            value = np.array(cmc_per_id[z[1]] + cmc_per_id[z[2]]).T[0]
+            value = np.array(value_cmc).T[0]
             self.r1_per_zoo[z[0]] = np.sum(value) / len(value)
 
         # return ap and r1 per query for the improvement calc

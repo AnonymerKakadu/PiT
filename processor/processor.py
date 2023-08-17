@@ -155,8 +155,8 @@ def do_train(cfg,
                             target_view = target_view.to(device)
                             feat = model(img, cam_label=camids, view_label=target_view)
                             evaluator.update((feat, vid, camid))
-                    cmc, mAP, _, _, _, _, _ = evaluator.compute()
-                    logger.info("Validation Results - Epoch: {}".format(epoch))
+                    cmc, mAP, _, _, _, _, _ = evaluator.compute(epoch, num + 1)
+                    logger.info("Validation Results - Split: {} Epoch: {}".format(num + 1, epoch))
                     logger.info("mAP: {:.1%}".format(mAP))
                     for r in [1, 5, 10]:
                         logger.info("CMC curve, Rank-{:<3}:{:.1%}".format(r, cmc[r - 1]))
@@ -170,8 +170,8 @@ def do_train(cfg,
                         target_view = target_view.to(device)
                         feat = model(img, cam_label=camids, view_label=target_view)
                         evaluator.update((feat, vid, camid))
-                cmc, mAP, _,  _, _, _, _ = evaluator.compute()
-                logger.info("Validation Results - Epoch: {}".format(epoch))
+                cmc, mAP, _,  _, _, _, _ = evaluator.compute(epoch, num + 1)
+                logger.info("Validation Results - Split: {} Epoch: {}".format(num + 1, epoch))
                 logger.info("mAP: {:.3%}".format(mAP))
                 for r in [1, 5, 10, 20]:
                     logger.info("CMC curve, Rank-{:<3}:{:.3%}".format(r, cmc[r - 1]))

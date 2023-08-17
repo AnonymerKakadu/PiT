@@ -79,7 +79,6 @@ class PolarBearVidID(BaseImageDataset):
         temp_test_images_set = set(temp_test_images)
         train_images[split_id] = list(all_images_set - temp_test_images_set)
 
-        # TODO: Query should get assigned dynamically
         setlist = [[] for _ in range(13)]
         for instance in test_images[split_id]:
             id = instance.get_individual()[0]
@@ -97,9 +96,10 @@ class PolarBearVidID(BaseImageDataset):
                 querylist.append(instance)
             else:
                 gallerylist.append(instance)
+                break
 
-        gallery_images[split_id] = querylist + gallerylist  # Insert all images into gallery in eval remove current query image
-        query_images[split_id] = querylist
+        gallery_images[split_id] = gallerylist  #querylist + gallerylist  # Insert all images into gallery in eval remove current query image
+        query_images[split_id] = test_images[split_id]
         
 
         train = {}
@@ -165,8 +165,8 @@ class PolarBearVidID(BaseImageDataset):
         print("  {}. Fold:".format(split_id))
         print("  ------------------------------------------")
         print("  Train {}   | {:5d} | {:8d} | {:8d}".format(split_id, num_train_pids[split_id], num_train_tracklets[split_id], np.sum(num_train_imgs[split_id])))
-        print("  Query {}   | {:5d} | {:8d} | {:8d}".format(split_id, num_query_pids[split_id], num_query_tracklets[split_id], np.sum(num_query_imgs[split_id])))
-        print("  Gallery {} | {:5d} | {:8d} | {:8d}".format(split_id, num_gallery_pids[split_id], num_gallery_tracklets[split_id], np.sum(num_gallery_imgs[split_id])))
+        print("  Test  {}   | {:5d} | {:8d} | {:8d}".format(split_id, num_query_pids[split_id], num_query_tracklets[split_id], np.sum(num_query_imgs[split_id])))
+        # print("  Gallery {} | {:5d} | {:8d} | {:8d}".format(split_id, num_gallery_pids[split_id], num_gallery_tracklets[split_id], np.sum(num_gallery_imgs[split_id])))
         print("  ------------------------------------------")
         print("  Total     | {:5d} | {:8d} | {:8d}".format(num_total_pids[split_id], num_total_tracklets[split_id], total_num[split_id]))
         print("  ------------------------------------------")

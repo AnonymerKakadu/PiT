@@ -142,7 +142,8 @@ class R1_mAP_eval():
         # save to feature file
         with open(os.path.join(folderpath,filename), 'w') as f:
             for item in qf.numpy():
-                f.write("%s\n" % item)
+                formatted_vector = ' '.join(map(str, item))
+                f.write(formatted_vector + '\n')
 
         if self.reranking:
             print('=> Enter reranking')

@@ -17,6 +17,7 @@ Here is a brief instruction for installing the experimental environment.
 $ conda create -n PiT python=3.6 -y
 $ conda activate PiT (Win 11: activate PiT)
 # install pytorch 1.8.1/1.6.0 (other versions may also work)
+$ pip install torch==1.8.1+cu111 torchvision==0.9.1+cu111 torchaudio==0.8.1 -f https://download.pytorch.org/whl/torch_stable.html
 $ pip install timm scipy einops yacs opencv-python==4.3.0.36 tensorboard pandas
 ```
 

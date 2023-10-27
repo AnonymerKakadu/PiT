@@ -125,14 +125,17 @@ class R1_mAP_eval():
         if self.feat_norm:
             print("The test feature is normalized")
             feats = torch.nn.functional.normalize(feats, dim=1, p=2)  # along channel
-        # query
-        qf = feats[:self.num_query]
-        q_pids = np.asarray(self.pids[:self.num_query])
-        q_camids = np.asarray(self.camids[:self.num_query])
-        # gallery is the same
-        gf = qf
-        g_pids = q_pids
-        g_camids = q_camids
+
+        # query and gallery are both training set
+        # Assign the entire arrays/lists to both query and gallery variables
+        qf = feats
+        q_pids = np.asarray(self.pids)
+        q_camids = np.asarray(self.camids)
+
+        gf = feats
+        g_pids = np.asarray(self.pids)
+        g_camids = np.asarray(self.camids)
+
         # write the feature vectors to a file and save it
         filename = 'feature_vectors_epoch_' + str(epoch)
         folderpath = os.path.join('logs', 'PolarBearVidID_PiT', 'feature_vectors', 'fold_' + str(split))

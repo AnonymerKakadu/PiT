@@ -65,11 +65,9 @@ class PolarBearVidID(BaseImageDataset):
         # Create dict with names
         test_images = {}
         train_images = {}
-        query_images = {}
-        gallery_images = {}
         all_images_set = set(all_images)
 
-        # For all Folds get the names of the test tracklets and split them into query and gallery
+        # For all Folds get the names of the test tracklets and split them into train and test
         
         test_images[split_id] = self._get_dataset_images(track_fold_info[split_id])
 
@@ -78,45 +76,17 @@ class PolarBearVidID(BaseImageDataset):
 
         temp_test_images_set = set(temp_test_images)
         train_images[split_id] = list(all_images_set - temp_test_images_set)
-
-        setlist = [[] for _ in range(13)]
-        for instance in test_images[split_id]:
-            id = instance.get_individual()[0]
-            setlist[id].append(instance.get_individual())
-
-        split_index = [0] * len(setlist)
-        for i in range(len(setlist)):
-            setlist[i] = list(set(setlist[i]))
-            split_index[i] = round(len(setlist[i]) * 0.2)
-
-        querylist = []
-        gallerylist = []
-        for instance in test_images[split_id]:
-            if instance.get_individual() in setlist[instance.get_individual()[0]][:split_index[instance.get_individual()[0]]]:
-                querylist.append(instance)
-            else:
-                gallerylist.append(instance)
-                break
-
-        gallery_images[split_id] = gallerylist  #querylist + gallerylist  # Insert all images into gallery in eval remove current query image
-        query_images[split_id] = test_images[split_id]
         
-
         train = {}
         num_train_tracklets = {}
         num_train_pids = {}
         num_train_imgs = {}
-        query = {}
-        num_query_tracklets = {}
-        num_query_pids = {}
-        num_query_imgs = {}
-        gallery = {}
-        num_gallery_tracklets = {}
-        num_gallery_pids = {}
-        num_gallery_imgs = {}
+        test = {}
+        num_test_tracklets = {}
+        num_test_pids = {}
+        num_test_imgs = {}
         train_img = {}
-        query_img = {}
-        gallery_img = {}
+        test_img = {}
         num_imgs_per_tracklet = {}
         total_num = {}
         min_num = {}
@@ -129,30 +99,24 @@ class PolarBearVidID(BaseImageDataset):
         train[split_id], num_train_tracklets[split_id], num_train_pids[split_id], num_train_imgs[split_id] = \
         self._process_data(train_images[split_id])
 
-        query[split_id], num_query_tracklets[split_id], num_query_pids[split_id], num_query_imgs[split_id] = \
-        self._process_data(query_images[split_id])
-
-        gallery[split_id], num_gallery_tracklets[split_id], num_gallery_pids[split_id], num_gallery_imgs[split_id] = \
-        self._process_data(gallery_images[split_id])
+        test[split_id], num_test_tracklets[split_id], num_test_pids[split_id], num_test_imgs[split_id] = \
+        self._process_data(test_images[split_id])
 
         train_img[split_id], _, _ = \
         self._extract_1stfeame(train_images[split_id])
 
-        query_img[split_id], _, _ = \
-        self._extract_1stfeame(query_images[split_id])
+        test_img[split_id], _, _ = \
+        self._extract_1stfeame(test_images[split_id])
 
-        gallery_img[split_id], _, _ = \
-        self._extract_1stfeame(gallery_images[split_id])
-
-        num_imgs_per_tracklet[split_id] = num_train_imgs[split_id] + num_gallery_imgs[split_id] + num_query_imgs[split_id]
+        num_imgs_per_tracklet[split_id] = num_train_imgs[split_id] + num_test_imgs[split_id]
 
         total_num[split_id] = np.sum(num_imgs_per_tracklet[split_id])
         min_num[split_id] = np.min(num_imgs_per_tracklet[split_id])
         max_num[split_id] = np.max(num_imgs_per_tracklet[split_id])
         avg_num[split_id] = np.mean(num_imgs_per_tracklet[split_id])
 
-        num_total_pids[split_id] = max(num_train_pids[split_id], num_query_pids[split_id])
-        num_total_tracklets[split_id] = num_train_tracklets[split_id] + num_gallery_tracklets[split_id] + num_query_tracklets[split_id]
+        num_total_pids[split_id] = max(num_train_pids[split_id], num_test_pids[split_id])
+        num_total_tracklets[split_id] = num_train_tracklets[split_id] +  + num_test_tracklets[split_id]
 
         if split_id == 1:
             print("=> PolarBearVidID loaded")
@@ -165,8 +129,7 @@ class PolarBearVidID(BaseImageDataset):
         print("  {}. Fold:".format(split_id))
         print("  ------------------------------------------")
         print("  Train {}   | {:5d} | {:8d} | {:8d}".format(split_id, num_train_pids[split_id], num_train_tracklets[split_id], np.sum(num_train_imgs[split_id])))
-        print("  Test  {}   | {:5d} | {:8d} | {:8d}".format(split_id, num_query_pids[split_id], num_query_tracklets[split_id], np.sum(num_query_imgs[split_id])))
-        # print("  Gallery {} | {:5d} | {:8d} | {:8d}".format(split_id, num_gallery_pids[split_id], num_gallery_tracklets[split_id], np.sum(num_gallery_imgs[split_id])))
+        print("  Test  {}   | {:5d} | {:8d} | {:8d}".format(split_id, num_test_pids[split_id], num_test_tracklets[split_id], np.sum(num_test_imgs[split_id])))
         print("  ------------------------------------------")
         print("  Total     | {:5d} | {:8d} | {:8d}".format(num_total_pids[split_id], num_total_tracklets[split_id], total_num[split_id]))
         print("  ------------------------------------------")
@@ -181,19 +144,15 @@ class PolarBearVidID(BaseImageDataset):
 
 
         self.train = train[split_id]
-        self.query = query[split_id]
-        self.gallery = gallery[split_id]
+        self.test = test[split_id]
 
         self.train_img = train_img[split_id]
-        self.query_img = query_img[split_id]
-        self.gallery_img = gallery_img[split_id]
+        self.test_img = test_img[split_id]
 
         self.num_train_pids, self.num_train_imgs, self.num_train_cams, self.num_train_vids = self.get_imagedata_info(
             self.train)
-        self.num_query_pids, self.num_query_imgs, self.num_query_cams, self.num_query_vids = self.get_imagedata_info(
-            self.query)
-        self.num_gallery_pids, self.num_gallery_imgs, self.num_gallery_cams, self.num_gallery_vids = self.get_imagedata_info(
-            self.gallery)
+        self.num_test_pids, self.num_test_imgs, self.num_test_cams, self.num_test_vids = self.get_imagedata_info(
+            self.test)
         
     def _getIDX_from_names(self, names):
         """

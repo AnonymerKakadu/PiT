@@ -58,6 +58,7 @@ def do_train(cfg,
             acc_meter.reset()
             scheduler.step(epoch)
             model.train()
+
             if freeze_or_not and epoch <= freeze_epochs:  # freeze layers for 2000 iterations
                 for name, module in model.named_children():
                     if name in freeze_layers:

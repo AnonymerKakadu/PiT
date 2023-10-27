@@ -64,7 +64,7 @@ if __name__ == '__main__':
         torch.distributed.init_process_group(backend='nccl', init_method='env://')
 
     os.environ['CUDA_VISIBLE_DEVICES'] = cfg.MODEL.DEVICE_ID
-    train_loader, val_loader, num_query, num_classes, camera_num, view_num = make_dataloader(cfg)
+    train_loader, val_loader, num_classes, camera_num, view_num = make_dataloader(cfg)
 
     if cfg.DATASETS.NAMES in ['ilids']:
         num_trials = 10
@@ -102,6 +102,8 @@ if __name__ == '__main__':
         optimizer, optimizer_center = make_optimizer(cfg, model, center_criterion)
 
         scheduler = create_scheduler(cfg, optimizer)
+
+        num_query = len(val_loader[i].dataset)
 
         cmc, mAP = do_train(
             cfg,

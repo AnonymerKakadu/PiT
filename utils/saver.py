@@ -30,9 +30,9 @@ class Saver(object):
 
         # Dump the `git log` and `git diff`. In this way one can checkout
         #  the last commit, add the diff and should be in the same state.
-        for cmd in ['log', 'diff']:
-            with open(self.path / f'git_{cmd}.txt', mode='wt') as f:
-                subprocess.run(['git', cmd], stdout=f)
+        #for cmd in ['log', 'diff']:
+        #    with open(self.path / f'git_{cmd}.txt', mode='wt') as f:
+        #        subprocess.run(['git', cmd], stdout=f)
 
     def load_logs(self):
         with open(str(self.params_path / 'params.json'), 'r') as fp:

@@ -165,7 +165,7 @@ def make_dataloader(cfg):
     elif cfg.DATASETS.NAMES in ['polarbearvidid']:
         s_tr_test, t_tr_test = get_transforms(False, cfg)
 
-        val_set = [VideoDataset(i.query + i.gallery, spatial_transform=s_tr_test,
+        val_set = [VideoDataset(i.test, spatial_transform=s_tr_test,
                                temporal_transform=t_tr_test) for i in dataset_5trials]
         val_loader = [DataLoader(
             i, batch_size=cfg.TEST.TEST_BATCH, shuffle=False, num_workers=2,
@@ -181,4 +181,4 @@ def make_dataloader(cfg):
             collate_fn=val_collate_fn
         )
 
-    return train_loader, val_loader, len(dataset.query), num_classes, cam_num, view_num
+    return train_loader, val_loader, num_classes, cam_num, view_num

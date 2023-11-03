@@ -18,7 +18,7 @@ MODEL:
   TEMPORAL: False
   FREEZE: True
   PYRAMID0_TYPE: 'vertical'      # 'horizontal','vertical','patch'
-  LAYER0_DIVISION_TYPE: '30x7'  # the type of division
+  LAYER0_DIVISION_TYPE: '10x7'  # the type of division
   LAYER_COMBIN: 1         # use how many layers of pyramid
   DIVERSITY: False
 

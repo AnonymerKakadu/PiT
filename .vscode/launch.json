@@ -10,7 +10,7 @@
             "request": "launch",
             "program": "train.py",
             //"program": "vis.py",
-            "args": ["--config_file", "configs/PolarBearVidID/pit_1x210_6p_14p_15p.yml", "MODEL.DEVICE_ID", "\"('0')\"" ],
+            "args": ["--config_file", "configs/PolarBearVidID/pit_14p.yml", "MODEL.DEVICE_ID", "\"('0')\"" ],
             //"args": ["--config_file", "configs/MARS/pit.yml", "MODEL.DEVICE_ID", "\"('0')\"" ],
             "console": "integratedTerminal",
             "justMyCode": true

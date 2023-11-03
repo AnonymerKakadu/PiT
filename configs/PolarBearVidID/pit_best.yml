@@ -18,8 +18,16 @@ MODEL:
   TEMPORAL: False
   FREEZE: True
   PYRAMID0_TYPE: 'horizontal'      # 'horizontal','vertical','patch'
-  LAYER0_DIVISION_TYPE: '7x10'  # the type of division
-  LAYER_COMBIN: 1         # use how many layers of pyramid
+  LAYER0_DIVISION_TYPE: '1x210'  # the type of division
+  PYRAMID1_TYPE: 'horizontal'
+  LAYER1_DIVISION_TYPE: '6x35'
+  PYRAMID2_TYPE: 'vertical'
+  LAYER2_DIVISION_TYPE: '10x7'
+  PYRAMID3_TYPE: 'patch'
+  LAYER3_DIVISION_TYPE: '14p'
+  PYRAMID4_TYPE: 'horizontal'
+  LAYER4_DIVISION_TYPE: 'NULL'
+  LAYER_COMBIN: 4         # use how many layers of pyramid
   DIVERSITY: False
 
 INPUT:
@@ -69,5 +77,5 @@ TEST:
   NECK_FEAT: 'before'
   FEAT_NORM: 'yes'
 
-OUTPUT_DIR: 'pit_7x30'
+OUTPUT_DIR: 'pit_best'
 

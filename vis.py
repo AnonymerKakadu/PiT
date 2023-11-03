@@ -71,14 +71,16 @@ if __name__ == "__main__":
         T.Normalize(mean=[0.485, 0.456, 0.406], std=[0.229, 0.224, 0.225])
     ])
 
+    # change image name here
     filename = 'testimage'
     with open(filename+'.jpg', 'rb') as f:
         with Image.open(f) as im:
             img = im.convert('RGB')
     img = torch.stack([val_transforms(img)], 0).unsqueeze(0).to("cuda")
 
+    # change used model name here
     model_path = 'transformer_120.pth'
-    train_loader, val_loader, num_query, num_classes, camera_num, view_num = make_dataloader(cfg)
+    train_loader, val_loader, num_classes, camera_num, view_num = make_dataloader(cfg)
     model = make_model(cfg, num_class=num_classes, camera_num=camera_num, view_num=view_num)
     model.load_param(os.path.join(OUTPUT_DIR, model_path))
     model.to("cuda")

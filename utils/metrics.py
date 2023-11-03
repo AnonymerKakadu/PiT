@@ -120,7 +120,7 @@ class R1_mAP_eval():
         self.pids.extend(np.asarray(pid))
         self.camids.extend(np.asarray(camid))
 
-    def compute(self, epoch, split):  # called after each epoch
+    def compute(self, epoch, split, outputdir):  # called after each epoch
         feats = torch.cat(self.feats, dim=0)
         if self.feat_norm:
             print("The test feature is normalized")
@@ -138,7 +138,7 @@ class R1_mAP_eval():
 
         # write the feature vectors to a file and save it
         filename = 'feature_vectors_epoch_' + str(epoch)
-        folderpath = os.path.join('logs', 'PolarBearVidID_PiT', 'feature_vectors', 'fold_' + str(split))
+        folderpath = os.path.join(outputdir, 'feature_vectors', 'fold_' + str(split))
         if not os.path.exists(folderpath):
             os.makedirs(folderpath)
             

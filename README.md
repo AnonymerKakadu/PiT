@@ -4,12 +4,13 @@
 
 Implementation of the proposed PiT used on the PolarBearVidID Dataset. Please refer to [[PolarBearVidID @ MDPI]](https://www.mdpi.com/2076-2615/13/5/801) and [[PiT @ Arxiv]](https://arxiv.org/pdf/2202.06014.pdf).
 
-![dataset](./Dataset.png)
-![framework](./framework.jpg)
-
+![dataset](./readme/Dataset.png)
+![framework](./readme/framework.jpg)
+![pitpyramid](./readme/pitpyramid.jpg)
 
 ## Getting Started
 ### Requirements
+
 Here is a brief instruction for installing the experimental environment.
 ```
 # Windows 10 and 11 (use cmd)
@@ -22,52 +23,48 @@ $ pip install timm scipy einops yacs opencv-python==4.3.0.36 tensorboard pandas
 ```
 
 ### Download pre-trained model
+
 The pre-trained vit model can be downloaded in this [link](https://github.com/rwightman/pytorch-image-models/releases/download/v0.1-vitjx/jx_vit_base_p16_224-80ecf9dd.pth) and should be put in the `checkpoints/` directory.
 
 ### Dataset Preparation
+
 Download PolarBearVidID Dataset at [PolarBearVidID](https://zenodo.org/record/7564529) and store it in the `data/PolarBearVidID` Directory.
 
 ## Training and Testing
+
 ```
 # This command below includes the training and testing processes.
 $ python train.py --config_file configs/PolarBearVidID/pit.yml MODEL.DEVICE_ID "('0')"
-# For testing only
-$ python train.py --config_file configs/PolarBearVidID/pit-test.yml MODEL.DEVICE_ID "('0')"
 ```
 
 ## Visualize findings
+
 ```
 $ tensorboard --logdir_spec fold1:logs\PolarBearVidID_PiT\1,fold2:logs\PolarBearVidID_PiT\2,fold3:logs\PolarBearVidID_PiT\3,fold4:logs\PolarBearVidID_PiT\4,fold5:logs\PolarBearVidID_PiT\5
 ```
 
+## Create attention map
 
-## Results in the Paper
-TODO
-2023-07-05 23:37:19,664 pit INFO: 5 trails average:
-2023-07-05 23:37:19,665 pit INFO: mAP: 18.366%
-2023-07-05 23:37:19,665 pit INFO: CMC curve, Rank-1  :12.274%
-2023-07-05 23:37:19,665 pit INFO: CMC curve, Rank-5  :29.364%
-2023-07-05 23:37:19,665 pit INFO: CMC curve, Rank-10 :47.281%
-2023-07-05 23:37:19,665 pit INFO: CMC curve, Rank-20 :59.931%
-TODO
-
-The results of MARS and iLIDS-VID are trained using one 24G NVIDIA GPU and provided below. You can change the parameter `DATALOADER.P` in yml file to decrease the GPU memory cost.
-
-| Model | Rank-1@MARS | Rank-1@iLIDS-VID |
-| --- | --- | --- |
-| PiT |  [90.22](https://pan.baidu.com/s/1nw5yofEilW0ffG_ZF4eoXQ) (code:wqxv)|  [92.07](https://pan.baidu.com/s/10LosWwUMktTiWvbHEP1Tjw) (code: quci)|
-
-You can download these models and put them in the `../logs/[DATASET]_PiT_1x210_3x70_105x2_6p` directory. Then use the command below to evaluate them.
- ```
-$ python test.py --config_file configs/PolarBearVidID/pit.yml MODEL.DEVICE_ID "('0')" 
+```
+$ python vis.py --config_file configs/PolarBearVidID/pit.yml MODEL.DEVICE_ID "('0')"
 ```
 
 
+## Results on PolarBearVidID
+With a rank-1 performance of 95.88 ± 1.45 % and a mAP score of 81.62 ± 7.23 %, the adapted PiT_14p trained for 400 epochs
+outperformed the image-based baseline approach while almost reaching the performance
+of GLTR.
+
+![results](./readme/results.png)
+![results](./readme/confmat.png)
+![results](./readme/tsne.png)
+
 ## Acknowledgement
 
-This repository is built upon the repository [TranReID](https://github.com/damo-cv/TransReID) and [PiT](https://github.com/deropty/PiT).
+This repository is built upon the repository [PiT](https://github.com/deropty/PiT) and [TranReID](https://github.com/damo-cv/TransReID).
 
 ## Citation
+
 If you find this project useful for your research, please kindly cite:
 ```
 @article{zuerl_polarbearvidid_2023,

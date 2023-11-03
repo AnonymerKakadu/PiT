@@ -24,7 +24,7 @@ MODEL:
   PYRAMID2_TYPE: 'vertical'
   LAYER2_DIVISION_TYPE: '42x5'
   PYRAMID3_TYPE: 'vertical'
-  LAYER3_DIVISION_TYPE: '30x7'
+  LAYER3_DIVISION_TYPE: '10x7'
   PYRAMID4_TYPE: 'horizontal'
   LAYER4_DIVISION_TYPE: 'NULL'
   LAYER_COMBIN: 4         # use how many layers of pyramid

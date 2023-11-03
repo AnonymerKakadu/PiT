@@ -1,6 +1,7 @@
 import os
 import cv2
 
+# Helper function to flip all images in polar bear dataset
 def get_all_jpgs_in_folder(folder_path):
     file_list = []
     for root, dirs, files in os.walk(folder_path):

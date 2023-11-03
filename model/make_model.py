@@ -329,19 +329,16 @@ class build_transformer_local(nn.Module):
             token = features[:, :, 0:1]
             feature = features[:, :, 1:].reshape(B,N,self.base.patch_embed.num_y, self.base.patch_embed.num_x, -1)
 
-            # different division strategy
+            # different division strategy !dimensions adapted for horizontal frames!
             if self.pyramid_type[i] == 'patch':
                 if self.pyramid_type[i] == 'patch':
                     if self.layer_division_num[i] == 6:
-                        # Swapping the dimensions from 7x5 to 5x7
                         local_feats = [feature[:, :, m * 5:(m + 1) * 5, n * 7:(n + 1) * 7, :].reshape(B, N, 35, -1)
                                     for m in range(2) for n in range(3)]
                     elif self.layer_division_num[i] == 14:
-                        # Swapping the dimensions from 3x5 to 5x3
                         local_feats = [feature[:, :, m * 5:(m + 1) * 5, n * 3:(n + 1) * 3, :].reshape(B, N, 15, -1)
                                     for m in range(2) for n in range(7)]
                     elif self.layer_division_num[i] == 15:
-                        # Swapping the dimensions from 7x2 to 2x7
                         local_feats = [feature[:, :, m * 2:(m + 1) * 2, n * 7:(n + 1) * 7, :].reshape(B, N, 14, -1)
                                     for m in range(5) for n in range(3)]
 

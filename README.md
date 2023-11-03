@@ -6,7 +6,9 @@ Implementation of the proposed PiT used on the PolarBearVidID Dataset. Please re
 
 ![dataset](./readme/Dataset.png)
 ![framework](./readme/framework.jpg)
-![pitpyramid](./readme/pitpyramid.jpg)
+<p align="center">
+  <img src="./readme/pitpyramid.jpg" width="50%" />
+</p>
 
 ## Getting Started
 ### Requirements
@@ -56,8 +58,10 @@ outperformed the image-based baseline approach while almost reaching the perform
 of GLTR.
 
 ![results](./readme/results.png)
-![results](./readme/confmat.png)
-![results](./readme/tsne.png)
+<p align="center">
+  <img src="./readme/confmat.png" width="50%" />
+  <img src="./readme/tsne.png" width="50%" />
+</p>
 
 ## Acknowledgement
 
